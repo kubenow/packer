@@ -30,7 +30,7 @@ before_install:
   
   #Extract secrets
   - tar xzvf tmp/keys.tgz -C tmp
-  - ls -la temp/
+  - ls -la tmp/
   
   #Add the keypair to the agent
   - echo "$(ssh-agent -s)"
