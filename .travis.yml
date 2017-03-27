@@ -67,6 +67,8 @@ before_script:
 
   #Render Templates from tmp/secrets-kubenow/packer into tmp/packer
   - env | j2 --format=env secrets-kubenow/packer/"$HOST_CLOUD".json.j2 > secrets-kubenow/packer/"$HOST_CLOUD".json
+  - ls -la
+  - ls -la secrets-kubenow/packer
 
 script:
   - packer build -var-file=secrets-kubenow/packer/"$HOST_CLOUD".json secrets-kubenow/packer/build-"$HOST_CLOUD".json 
