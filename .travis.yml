@@ -1,5 +1,8 @@
 language: python
 
+notifications:
+  email: false
+
 sudo: required
 
 git:
@@ -12,8 +15,7 @@ env:
 
 
 before_install:
-  
-  - echo "I'm here"
+
   #Creating tmp dir
   - mkdir tmp
 
@@ -23,7 +25,7 @@ before_install:
     -K $encrypted_92e1e3eadcc5_key
     -iv $encrypted_92e1e3eadcc5_iv
     -in keys.enc
-    -out keys.tgz
+    -out tmp/keys.tgz
     -d
   
   #Extract secrets
