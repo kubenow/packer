@@ -30,8 +30,10 @@ before_install:
   
   #Extract secrets
   - tar xzvf tmp/keys.tgz -C tmp
+  - ls -la temp/
   
   #Add the keypair to the agent
+  - echo "$(ssh-agent -s)"
   - eval "$(ssh-agent -s)"
   - ssh-add tmp/secret/kubenow-ci
   
