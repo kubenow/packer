@@ -1,0 +1,72 @@
+language: python
+
+notifications:
+  email: false
+
+sudo: required
+
+git:
+  depth: 3
+
+env:
+  - HOST_CLOUD=openstack
+  - HOST_CLOUD=gce
+  - HOST_CLOUD=aws
+
+
+before_install:
+
+  #Decrypt secrets
+  - >
+    openssl aes-256-cbc
+    -K $encrypted_92e1e3eadcc5_key
+    -iv $encrypted_92e1e3eadcc5_iv
+    -in keys.enc
+    -out keys.tgz
+    -d
+  
+  #Extract secrets
+  - tar xzvf keys.tgz
+  
+  #Add the keypair to the agent
+  - eval "$(ssh-agent -s)"
+  - ssh-add keys/id_rsa
+  
+  #Get secrets
+  - git clone git@github.com:mcapuccini/secrets-kubenow.git secrets-kubenow
+
+install:
+
+  #INSTALL DEPS
+
+  #Packer
+  - >
+      curl
+      https://releases.hashicorp.com/packer/0.12.3/packer_0.12.3_linux_amd64.zip
+      > ./packer.zip
+  - sudo unzip ./packer.zip -d /usr/bin
+  - sudo chmod +x /usr/bin/packer
+  
+  #Jinja2 and its line interface
+  - sudo pip install --upgrade pip
+  - sudo pip install Jinja2
+  - sudo pip install j2cli
+  
+before_script:
+
+  #Source RC file
+  - source secrets-kubenow/host_cloud/CityCloud.sh
+
+  #Set necessary environmental variables
+
+  # Variable common to all three platform
+  - export current_version=$(git describe --tags --always)
+
+  # Variable needed only for GCE
+  - export playbook_dir=./
+
+  #Render Templates from tmp/secrets-kubenow/packer into tmp/packer
+  - env | j2 --format=env secrets-kubenow/packer/"$HOST_CLOUD".json.j2 > secrets-kubenow/packer/"$HOST_CLOUD".json
+
+script:
+  - packer build -var-file=secrets-kubenow/packer/"$HOST_CLOUD".json build-"$HOST_CLOUD".json 
