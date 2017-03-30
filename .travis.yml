@@ -76,8 +76,6 @@ before_script:
   - chmod +x script.sh
   
   - source script.sh
-    
-  - ./packer --version
 
 script:
   - ./packer build -force -var-file=secrets-kubenow/packer/"$HOST_CLOUD".json build-"$HOST_CLOUD".json
