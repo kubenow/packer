@@ -1,21 +1,19 @@
 language: python
 
+#To be removed once testing is finished
 notifications:
   email: false
 
-sudo: required
-
-git:
-  depth: 3
+#branches:
+#  only:
+#  - master
 
 env:
-  - HOST_CLOUD=openstack
+#  - HOST_CLOUD=openstack
   - HOST_CLOUD=gce
-  - HOST_CLOUD=aws
-
+#  - HOST_CLOUD=aws
 
 before_install:
-
   #Decrypt secrets
   - >
     openssl aes-256-cbc
@@ -36,7 +34,6 @@ before_install:
   - git clone git@github.com:mcapuccini/secrets-kubenow.git secrets-kubenow
 
 install:
-
   #INSTALL DEPS
 
   #Packer
@@ -44,29 +41,33 @@ install:
       curl
       https://releases.hashicorp.com/packer/0.12.3/packer_0.12.3_linux_amd64.zip
       > ./packer.zip
-  - sudo unzip ./packer.zip -d /usr/bin
-  - sudo chmod +x /usr/bin/packer
+  - unzip ./packer.zip -d /tmp
   
   #Jinja2 and its line interface
-  - sudo pip install --upgrade pip
-  - sudo pip install Jinja2
-  - sudo pip install j2cli
+  - pip install --upgrade pip
+  - pip install Jinja2
+  - pip install j2cli
   
 before_script:
-
-  #Source RC file
+  #Source RC file for OpenStack
   - source secrets-kubenow/host_cloud/CityCloud.sh
 
   #Set necessary environmental variables
 
-  # Variable common to all three platform
-  - export current_version=$(git describe --tags --always)
+  # Variable common to all three platforms
+  - export current_version=v$(git describe --tags --always | tr -d .)
 
   # Variable needed only for GCE
   - export playbook_dir=./
 
-  #Render Templates from tmp/secrets-kubenow/packer into tmp/packer
+  #Render templates from tmp/secrets-kubenow/packer into tmp/packer
   - env | j2 --format=env secrets-kubenow/packer/"$HOST_CLOUD".json.j2 > secrets-kubenow/packer/"$HOST_CLOUD".json
+  
+  #Checking whether or not current version is tagged as release
+  - [[ $current_version =~ ^v[0-9]{3}([ab][0-9]{1,}|rc[0-9]{1,})?$ ]] || $current_version = "current"
 
 script:
-  - packer build -var-file=secrets-kubenow/packer/"$HOST_CLOUD".json build-"$HOST_CLOUD".json 
+  - /tmp/packer build -var-file=secrets-kubenow/packer/"$HOST_CLOUD".json build-"$HOST_CLOUD".json -force 
+
+
+

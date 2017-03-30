@@ -28,5 +28,13 @@
 			"type": "shell",
 			"script": "{{pwd}}/requirements.sh"
 		}
-	]
+	],
+    "post-processors": [
+        {
+            "type": "googlecompute-export",
+            "paths": [
+            "gs://kubenow-images/kubenow-'{{env `current_version`}}'.tar.gz"
+            ]
+        }
+    ]
 }
