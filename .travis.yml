@@ -75,12 +75,11 @@ before_script:
 
   - > 
     if [[ ($current_version =~ $regex) ]]; then
-        (echo "Release Version")
     else 
-        (echo "Release Version")
         ($current_version = "current")
     fi
-    echo $current_version
+
+  - echo $current_version
 
 script:
   - packer build -var-file=secrets-kubenow/packer/"$HOST_CLOUD".json build-"$HOST_CLOUD".json -force
