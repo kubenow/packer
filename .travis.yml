@@ -8,6 +8,9 @@ notifications:
 #  only:
 #  - master
 
+sudo: false
+dist: trusty
+
 env:
 #  - HOST_CLOUD=openstack
   - HOST_CLOUD=gce
