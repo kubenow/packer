@@ -33,7 +33,7 @@
         {
             "type": "googlecompute-export",
             "paths": [
-            "gs://kubenow-images/kubenow-'{{env `current_version`}}'.tar.gz"
+            "gs://kubenow-images/kubenow-{{env `current_version`}}.tar.gz"
             ]
         }
     ]
