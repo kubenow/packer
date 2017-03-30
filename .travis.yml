@@ -69,8 +69,8 @@ before_script:
   - env | j2 --format=env secrets-kubenow/packer/"$HOST_CLOUD".json.j2 > secrets-kubenow/packer/"$HOST_CLOUD".json
   
   #Checking whether or not current version is tagged as release
-  #- export regex="^v[0-9]{3}([ab][0-9]{1,}|rc[0-9]{1,})?$"
-  - ([[ $current_version =~ ^v[0-9]{3}([ab][0-9]{1,}|rc[0-9]{1,})?$ ]] || $current_version = "current")
+  - export regex="^v[0-9]{3}([ab][0-9]{1,}|rc[0-9]{1,})?$"
+  - ([[ $current_version =~ $regex ]] || $current_version = "current")
 
 script:
   - packer build -var-file=secrets-kubenow/packer/"$HOST_CLOUD".json build-"$HOST_CLOUD".json -force
