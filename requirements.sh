@@ -38,8 +38,8 @@ sudo apt-get install -y \
   linux-image-extra-virtual \
   docker-engine=1.12.5-0~ubuntu-xenial \
   kubelet=1.5.6-00 \
+  kubectl=1.5.6-00 \  
   kubeadm=1.6.0-00 \
-  kubectl=1.5.6-00 \
   kubernetes-cni=0.3.0.1-07a8a2-00
 
 echo "Installing other requirements..."
