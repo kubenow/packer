@@ -78,7 +78,7 @@ before_script:
         echo "Release Version";
     else 
         echo "Release Version";
-        $current_version = "current")
+        $current_version = "current"
     fi
 
 script:
