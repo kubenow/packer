@@ -46,7 +46,7 @@ install:
       > ./packer.zip
   - unzip ./packer.zip
 
-  - export PATH=$PATH:/usr/local/packer/bin:$PWD
+  #- export PATH=$PATH:/usr/local/packer/bin:$PWD
   
   #Jinja2 and its line interface
   - pip install --upgrade pip
@@ -77,10 +77,10 @@ before_script:
   
   - source script.sh
     
-  - packer --version
+  - ./packer --version
 
 script:
-  - packer build -force -var-file=secrets-kubenow/packer/"$HOST_CLOUD".json build-"$HOST_CLOUD".json
+  - ./packer build -force -var-file=secrets-kubenow/packer/"$HOST_CLOUD".json build-"$HOST_CLOUD".json
 
 
 #!/bin/bash \nif [[ $current_version =~ $regex ]]; then \n\techo "Current version tagged as release"\nelse \n\texport current_version="current"\nfi\necho "Current version is: $current_version"
