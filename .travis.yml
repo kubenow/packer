@@ -74,10 +74,11 @@ before_script:
   - echo $regex
 
   - > 
-    if [[ ($current_version =~ $regex) ]]; then
+    (if [[ $current_version =~ $regex ]]; then
+        echo $current_version
     else 
-        ($current_version = "current")
-    fi
+        $current_version = "current"
+    fi)
 
   - echo $current_version
 
