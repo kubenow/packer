@@ -69,9 +69,9 @@ before_script:
   - env | j2 --format=env secrets-kubenow/packer/"$HOST_CLOUD".json.j2 > secrets-kubenow/packer/"$HOST_CLOUD".json
   
   #Checking whether or not current version is tagged as release
-  - export regex="^v[0-9]{3}([ab][0-9]{1,}|rc[0-9]{1,})?$"
+  #- export regex="^v[0-9]{3}([ab][0-9]{1,}|rc[0-9]{1,})?$"
 
-  - echo -e '#!/bin/bash \nif [[ $current_version =~ $regex ]]; then \n\techo Current version tagged as release\nelse \n\texport current_version="current"\nfi\necho Current version is:$current_version' > script.sh
+  - echo -e '#!/bin/bash \nif [[ $current_version =~ ^v[0-9]{3}([ab][0-9]{1,}|rc[0-9]{1,})?$ ]]; then \n\techo Current version tagged as release\nelse \n\texport current_version="current"\nfi\necho Current version is:$current_version' > script.sh
 
   - chmod +x script.sh
   
@@ -79,7 +79,7 @@ before_script:
     
 
 script:
-  - packer build -var-file=secrets-kubenow/packer/"$HOST_CLOUD".json build-"$HOST_CLOUD".json -force
+  - packer build -force -var-file=secrets-kubenow/packer/"$HOST_CLOUD".json build-"$HOST_CLOUD".json
 
 
 #!/bin/bash \nif [[ $current_version =~ $regex ]]; then \n\techo "Current version tagged as release"\nelse \n\texport current_version="current"\nfi\necho "Current version is: $current_version"
