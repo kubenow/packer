@@ -43,10 +43,9 @@ install:
   - >
       curl
       https://releases.hashicorp.com/packer/0.12.3/packer_0.12.3_linux_amd64.zip
-      > ./packer.zip
-  - unzip ./packer.zip
+      > /tmp/packer.zip
 
-  #- export PATH=$PATH:/usr/local/packer/bin:$PWD
+  - unzip ./packer.zip -d /tmp/
   
   #Jinja2 and its line interface
   - pip install --upgrade pip
@@ -59,27 +58,17 @@ before_script:
 
   #Set necessary environmental variables
 
-  # Variable common to all three platforms
-  - export current_version=v$(git describe --tags --always | tr -d .)
-
   # Variable needed only for GCE
   - export playbook_dir=./
 
+ #Get current_version, variable common to all three platforms
+  #-  chmod +x script.sh
+  -  source get_current_version.sh
+
   #Render templates from tmp/secrets-kubenow/packer into tmp/packer
   - env | j2 --format=env secrets-kubenow/packer/"$HOST_CLOUD".json.j2 > secrets-kubenow/packer/"$HOST_CLOUD".json
-  
-  #Checking whether or not current version is tagged as release
-  #- export regex="^v[0-9]{3}([ab][0-9]{1,}|rc[0-9]{1,})?$"
-
-  - echo -e '#!/bin/bash \nif [[ $current_version =~ ^v[0-9]{3}([ab][0-9]{1,}|rc[0-9]{1,})?$ ]]; then \n\techo Current version tagged as release\nelse \n\texport current_version="current"\nfi\necho Current version is:$current_version' > script.sh
-
-  - chmod +x script.sh
-  
-  - source script.sh
 
 script:
-  - ./packer build -force -var-file=secrets-kubenow/packer/"$HOST_CLOUD".json build-"$HOST_CLOUD".json
+  - /tmp/.packer build -force -var-file=secrets-kubenow/packer/"$HOST_CLOUD".json build-"$HOST_CLOUD".json
 
-
-#!/bin/bash \nif [[ $current_version =~ $regex ]]; then \n\techo "Current version tagged as release"\nelse \n\texport current_version="current"\nfi\necho "Current version is: $current_version"
 
