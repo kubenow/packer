@@ -45,7 +45,7 @@ install:
       https://releases.hashicorp.com/packer/0.12.3/packer_0.12.3_linux_amd64.zip
       > /tmp/packer.zip
 
-  - unzip /tmp/packer.zip
+  - unzip /tmp/packer.zip -d /tmp/
   
   #Jinja2 and its line interface
   - pip install --upgrade pip
