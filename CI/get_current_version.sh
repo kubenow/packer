@@ -9,9 +9,9 @@ export current_version=v$(git describe --tags --always | tr -d .)
 regex=^v[0-9]{3}([ab][0-9]{1,}|rc[0-9]{1,})?$
 
 #Checking whether or not current version is tagged as release
-if [[ $current_version =~ $regex ]]; then 
+if [[ $current_version =~ $regex ]]; then
 	echo "Current version tagged as release"
-else 
+else
 	export current_version="current"
 fi
 
