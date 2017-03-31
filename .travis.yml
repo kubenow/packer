@@ -69,6 +69,6 @@ before_script:
   - env | j2 --format=env secrets-kubenow/packer/"$HOST_CLOUD".json.j2 > secrets-kubenow/packer/"$HOST_CLOUD".json
 
 script:
-  - /tmp/.packer build -force -var-file=secrets-kubenow/packer/"$HOST_CLOUD".json build-"$HOST_CLOUD".json
+  - /tmp/packer build -force -var-file=secrets-kubenow/packer/"$HOST_CLOUD".json build-"$HOST_CLOUD".json
 
 
