@@ -34,27 +34,12 @@ sudo DEBIAN_FRONTEND=noninteractive \
 
 echo "INSTALLING Kubernetes requirements..."
 
-echo "INSTALLING linux-image-extra-$(uname -r)"
-sudo apt-get install -y linux-image-extra-$(uname -r)
-
-echo "INSTALLING linux-image-extra-virtual"
-sudo apt-get install -y linux-image-extra-virtual
-
-echo "INSTALLING docker-engine"
-sudo apt-get install -y docker-engine=1.12.5-0~ubuntu-xenial
-
-echo "INSTALLING kubernetes-cni=0.3.0.1-07a8a2-00"
-sudo apt-get install -y kubernetes-cni=0.3.0.1-07a8a2-00
-
-echo "INSTALLING kubeadm"
-sudo apt-get install -y kubeadm=1.6.0-00
-  #linux-image-extra-$(uname -r) \
-  #linux-image-extra-virtual \
-  #docker-engine=1.12.5-0~ubuntu-xenial \ 
-  #kubeadm=1.6.0-00 \
-  #kubernetes-cni=0.3.0.1-07a8a2-00
-  #kubelet=1.5.6-00 \
-  #kubectl=1.5.6-00 \ 
+sudo apt-get install -y \
+  linux-image-extra-$(uname -r) \
+  linux-image-extra-virtual \
+  docker-engine=1.12.5-0~ubuntu-xenial \
+  kubernetes-cni=0.3.0.1-07a8a2-00 \
+  kubeadm=1.6.0-00 
 
 echo "Installing other requirements..."
 # APT requirements
