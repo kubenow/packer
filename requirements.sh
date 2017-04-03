@@ -36,11 +36,11 @@ echo "Installing Kubernetes requirements..."
 sudo apt-get install -y \
   linux-image-extra-$(uname -r) \
   linux-image-extra-virtual \
-  docker-engine=1.12.5-0~ubuntu-xenial \
-  #kubelet=1.5.6-00 \
-  #kubectl=1.5.6-00 \  
+  docker-engine=1.12.5-0~ubuntu-xenial \ 
   kubeadm=1.6.0-00 \
-  kubernetes-cni=0.3.0.1-07a8a2-00
+  #kubernetes-cni=0.3.0.1-07a8a2-00
+  #kubelet=1.5.6-00 \
+  #kubectl=1.5.6-00 \ 
 
 echo "Installing other requirements..."
 # APT requirements
