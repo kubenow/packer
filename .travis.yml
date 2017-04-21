@@ -5,7 +5,7 @@ notifications:
   email: false
 
 #branches:
-#  only:
+#  on:
 #  - master
 
 sudo: false
@@ -13,8 +13,8 @@ dist: trusty
 
 env:
 #  - HOST_CLOUD=openstack
-  - HOST_CLOUD=gce
-#  - HOST_CLOUD=aws
+#  - HOST_CLOUD=gce
+  - HOST_CLOUD=aws
 
 before_install:
   #Decrypt secrets
@@ -62,7 +62,6 @@ before_script:
   - export playbook_dir=./
 
  #Get current_version, variable common to all three platforms
-  #-  chmod +x script.sh
   -  source ./CI/get_current_version.sh
 
   #Render templates from tmp/secrets-kubenow/packer into tmp/packer
