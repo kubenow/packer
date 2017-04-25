@@ -8,8 +8,7 @@ notifications:
 #  on:
 #  - master
 
-sudo: false
-dist: trusty
+sudo: required
 
 env:
   - HOST_CLOUD=openstack
