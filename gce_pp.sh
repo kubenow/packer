@@ -3,11 +3,9 @@
 # This Script will be executed during the post-processor of the GCE packer builder
 # It downloads the compressed image just created, extracts it and converts to a QCOW format (to be used for OpenStack providers)
 
-#Sleeping so to wait that image in Google Bucket is ready
-sleep 3m
-
-#Simple checking that image is ready
-gsutil ls gs://kubenow-images/
+#Setting acls to public for new created image in Google storage so that it can be imported
+echo "Setting new created Google image as shared publicly..."
+gsutil acl ch -u AllUsers:R gs://kubenow-images/kubenow-current.tar.gz
 
 #Donwloading kubenow-current compressed image from Google Storage
 echo "Downloading kubenow compressed image from Google bucket..."
