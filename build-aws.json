@@ -18,7 +18,6 @@
             "ami_groups": "all",
             "ami_regions": ["ca-central-1", "eu-central-1", "eu-west-1", "eu-west-2", "us-east-1","us-east-2", "us-west-1", "us-west-2"],
             "instance_type": "t2.medium",
-            "force_deregister": "true",
             "region": "{{user `region`}}",
             "secret_key": "{{user `aws_secret_access_key`}}",
             "source_ami": "{{user `source_image_id`}}",          
@@ -31,5 +30,11 @@
 			"type": "shell",
 			"script": "{{pwd}}/requirements.sh"
 		}
-	]
+	],
+    "post-processors": [
+        {
+            "type": "shell-local",
+            "script": "{{pwd}}/aws_pp.sh"
+        }
+    ]
 }
