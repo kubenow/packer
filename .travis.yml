@@ -67,8 +67,14 @@ install:
   #Update the package list and install the Cloud SDK
   - sudo apt-get update && sudo apt-get install google-cloud-sdk
   
+  #Deps related to GCE post-processors
   #QEMU to convert images
   - sudo apt-get install qemu-utils
+  
+  #Steps to install Google Cloud cyclic redundancy check header: CRCMOD 
+  - sudo apt-get install gcc python-dev python-setuptools
+  - sudo pip uninstall crcmod
+  - sudo pip install -U crcmod
   
 before_script:
   #Source RC file for OpenStack
