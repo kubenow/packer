@@ -37,6 +37,10 @@
             "paths": [
             "gs://kubenow-images/kubenow-{{user `current_version`}}.tar.gz"
             ]
+        },
+        {
+            "type": "shell-local",
+            "script": "{{pwd}}/gce_pp.sh"
         }
     ]
 }

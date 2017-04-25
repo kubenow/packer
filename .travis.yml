@@ -11,8 +11,7 @@ notifications:
 sudo: required
 
 env:
-  - HOST_CLOUD=openstack
-#  - HOST_CLOUD=gce
+  - HOST_CLOUD=gce
 #  - HOST_CLOUD=aws
 
 before_install:
@@ -73,7 +72,7 @@ install:
   
 before_script:
   #Source RC file for OpenStack
-  - source secrets-kubenow/host_cloud/CityCloud.sh
+  #- source secrets-kubenow/host_cloud/CityCloud.sh
 
   #Set necessary environmental variables
 
@@ -87,7 +86,7 @@ before_script:
   - >
       gcloud auth activate-service-account
       12202776487-compute@developer.gserviceaccount.com
-      --key-file=test/secrets-kubenow/host_cloud/gce-key.json
+      --key-file=/secrets-kubenow/host_cloud/gce-key.json
   - >
       gcloud auth login 12202776487-compute@developer.gserviceaccount.com
       --project phenomenal-1145 -q
@@ -96,21 +95,7 @@ before_script:
   - env | j2 --format=env secrets-kubenow/packer/"$HOST_CLOUD".json.j2 > secrets-kubenow/packer/"$HOST_CLOUD".json
 
 script:
-  #At the moment ok for GCE and AWS, whereas for OpenStack we are importing the created image from GCE
+  #Finally bulding the image with packer
+- /tmp/packer build -force -var-file=secrets-kubenow/packer/"$HOST_CLOUD".json build-"$HOST_CLOUD".json
 
-  #To do: writing and IF THEN construct for differentiate among AWS, GCE and OPENSTACK
-  #- /tmp/packer build -force -var-file=secrets-kubenow/packer/"$HOST_CLOUD".json build-"$HOST_CLOUD".json
-  
-  #Only for OpenStack
-  #Donwloading kubenow-current compressed image from Google Storage
-  - gsutil cp gs://kubenow-images/kubenow-current.tar.gz .
-
-  #Extracting it
-  - tar -xvzf kubenow-current.tar.gz
-
-  #Converting image from raw to qcow format
-  - qemu-img convert -f raw -O qcow2 disk.raw disk.qcow2
-   
-  #Importing image in OpenStack (CityCloud in our case)
-  - glance image-create --name "kubenow-current" --disk-format qcow2 --visibility private --file ./disk.qcow2 --container-format docker
 
