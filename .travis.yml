@@ -86,7 +86,7 @@ before_script:
   - >
       gcloud auth activate-service-account
       12202776487-compute@developer.gserviceaccount.com
-      --key-file=/secrets-kubenow/host_cloud/gce-key.json
+      --key-file=secrets-kubenow/host_cloud/gce-key.json
   - >
       gcloud auth login 12202776487-compute@developer.gserviceaccount.com
       --project phenomenal-1145 -q
