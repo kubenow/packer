@@ -13,8 +13,8 @@ dist: trusty
 
 env:
 #  - HOST_CLOUD=openstack
-#  - HOST_CLOUD=gce
-  - HOST_CLOUD=aws
+  - HOST_CLOUD=gce
+#  - HOST_CLOUD=aws
 
 before_install:
   #Decrypt secrets
@@ -68,6 +68,6 @@ before_script:
   - env | j2 --format=env secrets-kubenow/packer/"$HOST_CLOUD".json.j2 > secrets-kubenow/packer/"$HOST_CLOUD".json
 
 script:
-  - travis_wait 30 /tmp/packer build -force -var-file=secrets-kubenow/packer/"$HOST_CLOUD".json build-"$HOST_CLOUD".json
+  - travis_wait /tmp/packer build -force -var-file=secrets-kubenow/packer/"$HOST_CLOUD".json build-"$HOST_CLOUD".json
 
 
