@@ -6,9 +6,11 @@
 		"network": "{{env `PACKER_NETWORK`}}",
 		"image_name": "{{env `PACKER_IMAGE_NAME`}}",
 	  	"source_image_name": "{{env `PACKER_SOURCE_IMAGE_NAME`}}",
-    		"account_file": "{{env `PACKER_GCE_ACCOUNT_FILE`}}",
-    		"zone": "{{env `PACKER_GCE_ZONE`}}",
-    		"project_id": "{{env `PACKER_GCE_PROJECT_ID`}}"
+        "account_file": "{{env `PACKER_GCE_ACCOUNT_FILE`}}",
+        "zone": "{{env `PACKER_GCE_ZONE`}}",
+    	"project_id": "{{env `PACKER_GCE_PROJECT_ID`}}",
+        "current_version": "{{env `current_version`}}"
+        
 	},
 	"builders": [
 		{
@@ -26,7 +28,19 @@
 	"provisioners": [
 		{
 			"type": "shell",
-			"script": "{{pwd}}/packer/requirements.sh"
+			"script": "{{pwd}}/requirements.sh"
 		}
-	]
+	],
+    "post-processors": [
+        {
+            "type": "googlecompute-export",
+            "paths": [
+            "gs://kubenow-images/kubenow-{{user `current_version`}}.tar.gz"
+            ]
+        },
+        {
+            "type": "shell-local",
+            "script": "{{pwd}}/gce_pp.sh"
+        }
+    ]
 }

@@ -1,0 +1,106 @@
+language: python
+
+#To be removed once testing is finished
+notifications:
+  email: false
+
+#branches:
+#  on:
+#  - master
+
+sudo: required
+
+env:
+  - HOST_CLOUD=gce
+#  - HOST_CLOUD=aws
+
+before_install:
+  #Decrypt secrets
+  - >
+    openssl aes-256-cbc
+    -K $encrypted_92e1e3eadcc5_key
+    -iv $encrypted_92e1e3eadcc5_iv
+    -in keys.enc
+    -out keys.tgz
+    -d
+  
+  #Extract secrets
+  - tar xzvf keys.tgz
+  
+  #Add the keypair to the agent
+  - eval "$(ssh-agent -s)"
+  - ssh-add keys/id_rsa
+  
+  #Get secrets
+  - git clone git@github.com:mcapuccini/secrets-kubenow.git secrets-kubenow
+
+install:
+  #INSTALL DEPS
+
+  #Packer
+  - >
+      curl
+      https://releases.hashicorp.com/packer/1.0.0-rc1/packer_1.0.0-rc1_linux_amd64.zip
+      > /tmp/packer.zip
+
+  - unzip /tmp/packer.zip -d /tmp/
+  
+  #Jinja2 and its line interface
+  - pip install --upgrade pip
+  - pip install Jinja2
+  - pip install j2cli
+  
+  #Google Cloud Engine SDK kit
+  #Create an environment variable for the correct distribution
+  - export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
+
+  #Add the Cloud SDK distribution URI as a package source
+  - >
+      echo "deb https://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" |
+      sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+  
+  #Import the Google Cloud Platform public key
+  - >
+      curl https://packages.cloud.google.com/apt/doc/apt-key.gpg |
+      sudo apt-key add -
+      
+  #Update the package list and install the Cloud SDK
+  - sudo apt-get update && sudo apt-get install google-cloud-sdk
+  
+  #Deps related to GCE post-processors
+  #QEMU to convert images
+  - sudo apt-get install qemu-utils
+  
+  # Install AWS deps
+  - sudo pip install awscli
+  
+before_script:
+  #Set necessary environmental variables
+
+  # Variable needed only for GCE
+  - export playbook_dir=./
+
+ #Get current_version, variable common to all three platforms
+  -  source ./CI/get_current_version.sh
+
+ #GCE login
+  - >
+      gcloud auth activate-service-account
+      12202776487-compute@developer.gserviceaccount.com
+      --key-file=secrets-kubenow/host_cloud/gce-key.json
+  - >
+      gcloud auth login 12202776487-compute@developer.gserviceaccount.com
+      --project phenomenal-1145 -q
+  
+  # AWS login
+  - source secrets-kubenow/host_cloud/aws.sh
+
+  #Render templates from tmp/secrets-kubenow/packer into tmp/packer
+  - env | j2 --format=env secrets-kubenow/packer/"$HOST_CLOUD".json.j2 > secrets-kubenow/packer/"$HOST_CLOUD".json
+
+script:
+  #Finally bulding the image with packer
+  #travis_wait 30
+- /tmp/packer build -force -var-file=secrets-kubenow/packer/"$HOST_CLOUD".json build-"$HOST_CLOUD".json
+
+
