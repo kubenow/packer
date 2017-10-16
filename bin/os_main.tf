@@ -3,13 +3,10 @@ variable username {}
 
 variable password {}
 variable auth_url {}
-variable user_domain_id {}
-variable domain_id {}
 variable region_name {}
 variable project_id {}
+variable domain_id {}
 variable tenant_id {}
-variable tenant_name {}
-variable auth_version {}
 variable current_version {}
 variable kubenow_image_name {}
 variable kubenow_image_id {}
@@ -45,7 +42,7 @@ resource "openstack_networking_floatingip_v2" "fip_1" {
 resource "openstack_compute_instance_v2" "kubenow-image-export" {
   name            = "kubenow-image-export"
   image_id        = "${var.os_image_id}"
-  flavor_name     = "8C-8GB-50GB"
+  flavor_name     = "ssc.medium"
   key_pair        = "${openstack_compute_keypair_v2.main.name}"
   security_groups = ["default"]
   floating_ip     = "${openstack_networking_floatingip_v2.fip_1.address}"
