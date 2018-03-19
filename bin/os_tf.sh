@@ -6,6 +6,7 @@
 # The script takes two parameters: current_version and image_id of the newly created KubewNow image.
 set -e
 
+# With $1 and $2 being the parameters passed to this script
 kubenow_image_name="$1"
 kubenow_image_id="$2"
 
@@ -30,7 +31,7 @@ qemu-img convert -f qcow2 -O qcow2 -c -q "$kubenow_image_name" "$kubenow_image_n
 # Generate md5sum of image
 md5sum "$kubenow_image_name".qcow2 >"$kubenow_image_name".qcow2.md5
 
-# Uploading the new image format to the AWS S3 bucket. Previous copy will be overwritten.
+# Uploading the new image format to the AWS S3 bucket. Previous copy will be overwritten!
 echo "Uploading new image format into AWS S3 bucket: kubenow-us-east-1 ..."
 aws s3 cp "$kubenow_image_name".qcow2 s3://kubenow-us-east-1 --region us-east-1 --acl public-read --quiet
 aws s3 cp "$kubenow_image_name".qcow2.md5 s3://kubenow-us-east-1 --region us-east-1 --acl public-read --quiet
